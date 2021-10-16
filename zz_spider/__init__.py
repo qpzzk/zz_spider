@@ -4,7 +4,7 @@
 # @File : __init__.py
 # @describe ：
 from __future__ import absolute_import
-from rabbit_mq.MqDeal import *
+from zz_spider.RabbitMq import *
 
 name = "zz_spider"
 

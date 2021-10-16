@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 10/14/21 5:21 PM
 # @Author  : ZZK
-# @File : MqDeal.py
+# @File : RabbitMq.py
 # @describe ：处理rabbitmq内容
 import pika
 import requests
