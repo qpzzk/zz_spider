@@ -50,7 +50,9 @@ class DealRabbitMQ(object):
                 return -1
             res = r.json()
             # ready,unack,total
-            return res['messages_ready'], res['messages_unacknowledged'], res['messages']
+            true_count = self.channel.queue_declare(queue=self.queue, durable=True).method.message_count
+            lax_count = max(true_count,res['messages'])
+            return res['messages_ready'], res['messages_unacknowledged'], lax_count
             # return dic['messages']
         except Exception as e:
             print("rabbitmq connect url error:",e)
@@ -73,9 +75,8 @@ class DealRabbitMQ(object):
         self.channel.basic_consume(self.queue, self.callback, False)
         while self.channel._consumer_infos:
             ready_count, unack_count, total_count = self.get_count_by_url()
-            true_count = self.channel.queue_declare(queue=self.queue, durable=True).method.message_count  # 真实的结果数量
-            print("ready中的消息量：{0}",true_count)
-            if total_count == 0 and true_count == 0:   #当真实消息量以及ready中全为0才代表消耗完
+            print("ready中的消息量：{0}",total_count)
+            if total_count == 0:   #当真实消息量以及ready中全为0才代表消耗完
                 self.channel.stop_consuming()  # 退出监听
             self.channel.connection.process_data_events(time_limit=1)
 

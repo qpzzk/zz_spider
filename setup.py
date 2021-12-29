@@ -10,11 +10,12 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='zz_spider',
-    version='0.0.3',
+    version='0.0.4',
     author='zzk',
     author_email='zzk_python@163.com',
     description='python使用MQ的场景',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     url='https://github.com/qpzzk/zz_spider',
     packages=setuptools.find_packages(),
     classifiers=[
