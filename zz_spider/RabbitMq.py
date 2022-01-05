@@ -10,7 +10,7 @@ from retrying import retry
 from pika.exceptions import AMQPError
 
 def retry_if_rabbit_error(exception):
-    print('连接rabbitmq出现错误')
+    print('rabbitmq出现错误')
     return isinstance(exception, AMQPError)
 
 class DealRabbitMQ(object):
@@ -56,6 +56,7 @@ class DealRabbitMQ(object):
             # return dic['messages']
         except Exception as e:
             print("rabbitmq connect url error:",e)
+            raise ConnectionError("rabbitmq connect url error:{0}".format(e))
 
     def callback(self,ch, method, properties, body):
         """
@@ -80,6 +81,22 @@ class DealRabbitMQ(object):
                 self.channel.stop_consuming()  # 退出监听
             self.channel.connection.process_data_events(time_limit=1)
 
+    @retry(retry_on_exception=retry_if_rabbit_error)
+    def send_mq(self,queue_name,msg):
+        """
+        往错误队列中写入数据
+        :return:
+        """
+        if not queue_name or not msg:
+            raise ValueError("queue_name or msg is None")
+        if 'error' not in queue_name:
+            raise ValueError("queue_name is not error queue")
+        self.channel.queue_declare(queue=queue_name, durable=True)
 
-
+        self.channel.basic_publish(exchange='',
+                              routing_key=queue_name,
+                              body=str(msg),
+                              properties=pika.BasicProperties(delivery_mode=2)
+                              )
+        print('成功写入消息')
 
