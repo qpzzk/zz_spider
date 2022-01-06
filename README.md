@@ -14,12 +14,12 @@ from zz_spider.rabbit_mq.MqDeal import DealRabbitMQ
 # @describe ：
 from zz_spider.RabbitMq import DealRabbitMQ
 
-host = '10.238.60.107'
-port = 5672
-user = 'root'
-password = 'Spider@2020'
-queue_name = 'in_16_20211201000000'
-url_port = 15672
+host = xxx
+port = xxx
+user = xxx
+password = xxx
+queue_name = xxx
+url_port = xxx
 
 
 def spider(res):
