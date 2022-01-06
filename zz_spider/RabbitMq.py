@@ -10,7 +10,6 @@ from retrying import retry
 from pika.exceptions import AMQPError
 
 def retry_if_rabbit_error(exception):
-    print('rabbitmq出现错误')
     return isinstance(exception, AMQPError)
 
 class DealRabbitMQ(object):
