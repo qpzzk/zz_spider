@@ -10,7 +10,7 @@ with open('README.md', 'r', encoding='utf-8') as fh:
 
 setuptools.setup(
     name='zz_spider',
-    version='0.0.7',
+    version='1.0.0',
     author='zzk',
     author_email='zzk_python@163.com',
     description='python使用MQ的场景',
@@ -26,6 +26,12 @@ setuptools.setup(
     install_requires=[
         "requests>=2.22.0",
         "pika>=1.2.0",
-        "retrying>=1.3.3"
+        "retrying>=1.3.3",
+        "environs==9.4.0",
+        "confluent-kafka==1.8.2",
+        "kafka==1.3.5",
+        "kafka-python==2.0.2",
+        "pykafka==2.8.0",
+        "loguru==0.5.3",
     ],
 )

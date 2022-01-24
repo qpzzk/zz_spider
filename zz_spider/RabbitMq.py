@@ -77,6 +77,11 @@ class DealRabbitMQ(object):
             if total_count == 0:   #当真实消息量以及ready中全为0才代表消耗完
                 self.channel.stop_consuming()  # 退出监听
             self.channel.connection.process_data_events(time_limit=1)
+        try:
+            self.channel.queue_delete(queue_name)
+            print("消费完成：成功清除队列")
+        except TypeError:
+            print("消费完成：成功清除队列")
 
     @retry(retry_on_exception=retry_if_rabbit_error)
     def send_mq(self,queue_name,msg):
