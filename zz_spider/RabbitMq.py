@@ -13,7 +13,7 @@ def retry_if_rabbit_error(exception):
     return isinstance(exception, AMQPError)
 
 class DealRabbitMQ(object):
-    def __init__(self,host,user, passwd,port,url_port):
+    def __init__(self,http_host,tcp_host,user, passwd,port):
         """
 
         :param host:
@@ -23,14 +23,14 @@ class DealRabbitMQ(object):
         :param url_port:
         :param spider_main:
         """
-        self.host = host
+        self.http_host = http_host
+        self.tcp_host = tcp_host
         self.user = user
         self.passwd = passwd
         self.port = port
-        self.url_port = url_port
 
         credentials = pika.PlainCredentials(user, passwd)
-        connection = pika.BlockingConnection(pika.ConnectionParameters(host=host, port=port, credentials=credentials,
+        connection = pika.BlockingConnection(pika.ConnectionParameters(host=tcp_host, port=port, credentials=credentials,
                                                                        heartbeat=0))  # heartbeat 表示7200时间没反应后就报错
         self.channel = connection.channel()
         self.channel.basic_qos(prefetch_size=0, prefetch_count=1)
@@ -41,7 +41,8 @@ class DealRabbitMQ(object):
         :return: ready,unack,total
         """
         try:
-            url = 'http://{0}:{1}/api/queues/%2f/{2}'.format(self.host,self.url_port,queue_name)
+            #'https://spiderrabbit.zhuanspirit.com/api/nodes'
+            url = 'http://{0}/api/queues/%2f/{1}'.format(self.http_host,queue_name)
             r = requests.get(url, auth=(self.user, self.passwd))
             if r.status_code != 200:
                 return -1
